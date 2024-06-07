@@ -1,0 +1,260 @@
+{block name="content"}
+
+{block name="style"}{include file='wechat@news/form-style'}{/block}
+
+<script type="text/javascript">
+    window.UEDITOR_HOME_URL = "/ueditor/";
+</script>
+<script type="text/javascript" charset="utf-8" src="/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="/ueditor/ueditor.all.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="/ueditor/lang/zh-cn/zh-cn.js"></script>
+
+<form onsubmit="return false;" data-auto="true" method="post" class='layui-form layui-card ' autocomplete="off" lay-filter="payment">
+
+    <div class="layui-card-body think-box-shadow">
+        <div class="padding-left-40 padding-right-30">
+            <label class="layui-form-item margin-top-20 block relative">
+                <span class="color-green margin-right-10">活动标题</span><span class="nowrap color-desc"></span>
+                <input name="activity_title" id="activity_title" required placeholder="请输入活动标题" value="{$info.activity_title|default=''}" class="layui-input">
+                <p class="help-block"></p>
+            </label>
+        </div>
+        <div class="padding-left-40 padding-right-30" style="width: 340px">
+            <label class="layui-form-item margin-top-20 block relative">
+                <span class="color-green margin-right-10">活动海报</span><span class="nowrap color-desc"></span>
+                <div style="">
+                    <img id="poster_img_url" name="poster_img_url" style="max-height: 200px;" src="{$info.poster_img|default=''}">&nbsp;&nbsp;&nbsp;
+                    <input lay-verify="required" required type="hidden" value="{$info.poster_img|default=''}" id="poster_img" name="poster_img">
+                    <button data-file="btn" data-field="poster_img" data-type="png,jpg,gif" class="layui-btn layui-btn-sm" type="button" style="display: block;">上传图片</button>
+                    <p class="help-block"></p>
+                </div>
+            </label>
+        </div>
+		
+        <div class="padding-left-40 padding-right-30">
+            <label class="layui-form-item margin-top-20 block relative">
+                <span class="color-green margin-right-10">活动时间</span><span class="nowrap color-desc"></span>
+                <input type="text" class="layui-input" required id="activity_time" value="{$info.activity_time|default=''}" name="activity_time" placeholder=" - ">
+                <p class="help-block"></p>
+            </label>
+        </div>
+        <div class="padding-left-40 padding-right-30">
+            <label class="layui-form-item margin-top-20 block relative">
+                <span class="color-green margin-right-10">投票时间</span><span class="nowrap color-desc"></span>
+                <input type="text" class="layui-input" required id="activity_ticket_time" value="{$info.activity_ticket_time|default=''}" name="activity_ticket_time" placeholder=" - ">
+                <p class="help-block"></p>
+            </label>
+        </div>
+
+        <!--虚线--><div class="hr-line-dashed"></div><!--虚线-->
+
+        <!--规则设置-->
+        <div class="padding-left-40 padding-right-30">
+            <label class="layui-form-item margin-top-20 block relative">
+                <span class="color-green margin-right-10">最大得票数</span><span class="nowrap color-desc"></span>
+                <input type="number" name="max_num" id="max_num" placeholder="" value="{$info.max_num|default='1'}" class="layui-input">
+                <p class="help-block">每个选手每天最多获得的免费票数</p>
+            </label>
+        </div>
+        <div class="padding-left-40 padding-right-30">
+            <label class="layui-form-item margin-top-20 block relative">
+                <span class="color-green margin-right-10">每人每日每用户</span><span class="nowrap color-desc"></span>
+                <input type="number" name="person_day_user_num" id="person_day_user_num" placeholder="" value="{$info.person_day_user_num|default='1'}" class="layui-input">
+                <p class="help-block">每人每天最多给每个用户投多少票。(送礼物投票不受影响)</p>
+            </label>
+        </div>
+        <div class="padding-left-40 padding-right-30">
+            <label class="layui-form-item margin-top-20 block relative">
+                <span class="color-green margin-right-10">每人每日</span><span class="nowrap color-desc"></span>
+                <input type="number" name="person_day_num" id="person_day_num" placeholder="" value="{$info.person_day_num|default='1'}" class="layui-input">
+                <p class="help-block">每人每天最多投多少票，当天给所有人投票的总数。(送礼物投票不受影响)</p>
+            </label>
+        </div>
+        <!--规则设置-->
+        <div class="padding-left-40 padding-right-30">
+            <label class="layui-form-item margin-top-20 block relative">
+                <span class="color-green margin-right-10">是否显示分组</span><span class="nowrap color-desc"></span>
+                <div class="group">
+                    开启<input type="radio" class="" name="is_group" value="1" {if $info.is_group == 1} checked {/if}>
+                    关闭<input type="radio" class="" name="is_group" value="0" {if $info.is_group == 0} checked {/if}>
+                </div>
+            </label>
+        </div>
+
+        <div class="padding-left-40 padding-right-30">
+            <label class="layui-form-item margin-top-20 block relative">
+                <span class="color-green margin-right-10">是否开启语音感谢（购买付费礼物后）</span><span class="nowrap color-desc"></span>
+                <div class="voice">
+                    开启<input type="radio" class="" name="is_voice" value="1" {if $info.is_voice == 1} checked {/if} >
+                    关闭<input type="radio" class="" name="is_voice" value="0" {if $info.is_voice == 0} checked {/if}>
+                </div>
+            </label>
+        </div>
+
+        <!--虚线--><div class="hr-line-dashed"></div><!--虚线-->
+        <!--内容设置-->
+        <div class="padding-left-40 padding-right-30">
+            <label class="layui-form-item margin-top-20 block relative">
+                <span class="color-green margin-right-10">大赛详情:</span><span class="nowrap color-desc"></span>
+                <script id="editor1" type="text/plain" style="width:800px;height:300px;"></script>
+                <input type="hidden" id="content1" value="{$info.activity_rule_content|default=''}">
+                <p class="help-block"></p>
+            </label>
+        </div>
+        <div class="padding-left-40 padding-right-30">
+            <label class="layui-form-item margin-top-20 block relative">
+                <span class="color-green margin-right-10">奖品介绍:</span><span class="nowrap color-desc"></span>
+                <script id="editor2" type="text/plain" style="width:800px;height:300px;"></script>
+                <input type="hidden" id="content2" value="{$info.activity_prize_content|default=''}">
+                <p class="help-block"></p>
+            </label>
+        </div>
+        <div class="padding-left-40 padding-right-30">
+            <label class="layui-form-item margin-top-20 block relative">
+                <span class="color-green margin-right-10">鸣谢单位:</span><span class="nowrap color-desc"></span>
+                <script id="editor3" type="text/plain" style="width:800px;height:300px;"></script>
+                <input type="hidden" id="content3" value="{$info.cooperative_company|default=''}">
+                <p class="help-block"></p>
+            </label>
+        </div>
+        <!--内容设置-->
+
+        <!--分享设置-->
+        <div class="padding-left-40 padding-right-30">
+            <label class="layui-form-item margin-top-20 block relative">
+                <span class="color-green margin-right-10">分享标题</span><span class="nowrap color-desc"></span>
+                <input name="share_title" id="share_title" placeholder="请输入分享标题" value="{$info.share_title|default=''}" class="layui-input">
+                <p class="help-block">分享给好友或朋友圈时的标题</p>
+            </label>
+        </div>
+        <div class="padding-left-40 padding-right-30" style="width: 340px;">
+            <label class="layui-form-item margin-top-20 block relative">
+                <span class="color-green margin-right-10">分享图片</span><span class="nowrap color-desc"></span>
+                <div style="">
+                    <img id="share_img_url" name="share_img_url" style="max-height:200px" src="{$info.share_img|default=''}">&nbsp;&nbsp;&nbsp;
+                    <input lay-verify="required" required type="hidden" value="{$info.share_img|default=''}" id="share_img" name="share_img">
+                    <button data-file="btn" data-field="share_img" data-type="png,jpg,gif" class="layui-btn layui-btn-sm" type="button" style="display: block;">上传图片</button>
+                    <p class="help-block"></p>
+                </div>
+            </label>
+        </div>
+        <div class="padding-left-40 padding-right-30">
+            <label class="layui-form-item margin-top-20 block relative">
+                <span class="color-green margin-right-10">分享描述</span><span class="nowrap color-desc"></span>
+                <input name="share_desc" id="share_desc"  placeholder="请输入分享描述" value="{$info.share_desc|default=''}" class="layui-input">
+                <p class="help-block">分享给好友或朋友圈时的描述</p>
+            </label>
+        </div>
+        <!--分享设置-->
+
+        <input type="hidden" id="activity_id" value="{$info.activity_id|default='0'}">
+        <div class="layui-form-item text-center">
+            {if $activity_id > 0}
+                <button class="layui-btn" type="button"  id="save_activity">保存活动</button>
+            {else}
+                <button class="layui-btn" type="button"  id="add_activity">添加活动</button>
+            {/if}
+        </div>
+    </div>
+</form>
+<script>
+    layui.use(['laydate','jquery','form','layedit'],function(){
+        var laydate = layui.laydate,$ = layui.jquery,form = layui.form,layedit = layui.layedit;
+        var ue1 = UE.getEditor('editor1');
+        var ue2 = UE.getEditor('editor2');
+        var ue3 = UE.getEditor('editor3');
+
+        var content1 = $("#content1").val();
+        var content2 = $("#content2").val();
+        var content3 = $("#content3").val();
+
+        ue1.ready(function(){ue1.setContent(content1);ue1.setHeight(800)})
+        ue2.ready(function(){ue2.setContent(content2);ue2.setHeight(800)})
+        ue3.ready(function(){ue3.setContent(content3);ue3.setHeight(800)})
+
+        //日期时间范围
+        laydate.render({
+            elem: '#activity_time'
+            ,type: 'datetime'
+            ,range: true
+        });
+        laydate.render({
+            elem: '#activity_ticket_time'
+            ,type: 'datetime'
+            ,range: true
+        });
+        //监听指定开关
+        form.on('switch(switchTest)', function(data){
+            layer.msg('开关checked：'+ (this.checked ? 'true' : 'false'), {
+                offset: '6px'
+            });
+            layer.tips('温馨提示：请注意开关状态的文字可以随意定义，而不仅仅是ON|OFF', data.othis)
+        });
+        //富文本编辑器
+        layedit.set({
+            uploadImage: {
+                url: "?s=admin/api.plugs/plupload&type=layui",
+                type: 'post'
+            }
+        })
+        var rule = layedit.build('activity_rule_content'); //建立规则编辑器
+        var prize = layedit.build('activity_prize_content'); //建立奖品编辑器
+        var cooperative_company = layedit.build('cooperative_company'); //建立鸣谢单位编辑器
+
+
+        form.render();
+        //添加活动
+        $("#add_activity,#save_activity").click(function(){
+            var activity_id = $("#activity_id").val();
+            var activity_title = $("#activity_title").val();
+            var poster_img = $("#poster_img").val();
+            var activity_time = $("#activity_time").val();
+            var activity_ticket_time = $("#activity_ticket_time").val();
+            var person_day_user_num = $("#person_day_user_num").val();
+            var person_day_num = $("#person_day_num").val();
+            var max_num = $("#max_num").val();
+            var is_group = $('.group').find('.layui-form-radioed').prev('input').val();
+            var is_voice = $('.voice').find('.layui-form-radioed').prev('input').val();
+            var activity_rule_content = ue1.getContent(rule);
+            var activity_prize_content = ue2.getContent(prize);
+            var cooperative_company_content = ue3.getContent(cooperative_company);
+            var share_title = $("#share_title").val();
+            var share_desc = $("#share_desc").val();
+            var share_img = $("#share_img").val();
+            $.ajax({
+                type: 'POST',
+                url: "{:url('activity/addActivity')}",
+                data: {
+                    activity_id:activity_id,
+                    activity_title:activity_title,
+                    poster_img:poster_img,
+                    activity_time:activity_time,
+                    activity_ticket_time:activity_ticket_time,
+                    person_day_user_num:person_day_user_num,
+                    person_day_num:person_day_num,
+                    max_num:max_num,
+                    is_group:is_group,
+                    is_voice:is_voice,
+                    activity_rule_content:activity_rule_content,
+                    activity_prize_content:activity_prize_content,
+                    share_title:share_title,
+                    share_desc:share_desc,
+                    share_img:share_img,
+                    cooperative_company:cooperative_company_content
+                },
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data)
+                    layer.msg(data.msg)
+                    if(data.code == 0){
+                        return false;
+                    }
+                    var go_url = "/admin.html#/ticket/activity/index.html?spm="+"{$_GET['spm']}";
+                    window.location.href = go_url;
+                }
+            });
+        })
+
+    })
+</script>
+{/block}

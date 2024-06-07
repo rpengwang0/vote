@@ -1,0 +1,238 @@
+{extend name='main'}
+{block name="content"}
+<style>
+    .y-layui-input-block{display: inline-block;margin-left: 0;}
+    .y-layui-input-block .layui-form-label{width:116px;}
+    .y-layui-input-block .layui-input-block{margin-left:146px;}
+    .y-fl{float:left;}
+    .y-box{float:left;border:1px solid #e6e6e6;padding:15px;}
+    .y-input-s{width:88px;display: inline-block}
+
+</style>
+<div class="layui-card-body" style="background:#fff;">
+    <div class="layui-row">
+        <div class="layui-input-block y-layui-input-block">
+            <div class="layui-form-item">
+                <label class="layui-form-label label-required-next" >头像：</label>
+                <div class="layui-input-block" style="width:260px;">
+                    <!--<input type="text" name="head_img" id="head_img" value="{$info.head_img |default=''}" class="layui-input y-input">-->
+                    <img id='head_img_url'  name='head_img_url' style='width: 100px; height:100px' src="{$vo.head_img|default=''}"  data-file='btn'  data-field='head_img' data-type='png,jpg,gif' >&nbsp;&nbsp;&nbsp;
+                    <input lay-verify='required' required type='hidden' value="{$vo.head_img|default=''}" id="head_img" name='head_img'>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label label-required-next" >姓名：</label>
+                <div class="layui-input-block" style="width:260px;">
+                    <input type="text" name="name" id="name" value="{$info.name |default=''}" class="layui-input y-input" placeholder="请输入选手姓名">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label " >作品名称：</label>
+                <div class="layui-input-block" style="width:260px;">
+                    <input type="text" name="pro_name" id="pro_name" value="{$info.pro_name |default=''}" class="layui-input y-input" placeholder="作品名称">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label " >公司名称：</label>
+                <div class="layui-input-block" style="width:260px;">
+                    <input type="text" name="company_name" id="company_name" value="{$info.company_name |default=''}" class="layui-input y-input" placeholder="公司名称">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" >性别：</label>
+                <div class="layui-input-block" style="width:260px;">
+                    <input class="layui-form-radio" type="radio" name="sex" value="1" checked>男
+                    <input class="layui-form-radio" type="radio" name="sex" value="2">女
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" >手机号：</label>
+                <div class="layui-input-block" style="width:260px;">
+                    <input type="text" name="mobile" id="mobile" value="{$info.mobile |default=''}" class="layui-input y-input" placeholder="请输入选手手机号">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label " >票数：</label>
+                <div class="layui-input-block" style="width:260px;">
+                    <input type="text" name="ticket_num" id="ticket_num" value="{$info.ticket_num |default=''}" class="layui-input y-input" placeholder="请输入选手票数">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label " >礼物：</label>
+                <div class="layui-input-block" style="width:260px;">
+                    <input type="text" name="mobile" id="gift_money" value="{$info.gift_money |default=''}" class="layui-input y-input" placeholder="请输入选手礼物">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label " >热度：</label>
+                <div class="layui-input-block" style="width:260px;">
+                    <input type="text" name="hot_num" id="hot_num" value="{$info.hot_num |default=''}" class="layui-input y-input" placeholder="请输入选手热度">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label " >分组：</label>
+                <div class="layui-input-block" style="width:260px;">
+                    <select name="group_id" id="group_id" class="layui-select">
+                        {foreach $group_list as $item}
+                        <option value="{$item['group_id']}">{$item['group_name']}</option>
+                        {/foreach}
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label " >选手编号：</label>
+                <div class="layui-input-block" style="width:260px;">
+                    <input type="text" name="player_num" id="player_num" value="{$info.player_num |default=''}" class="layui-input y-input" placeholder="请输入选手编号">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label label-required-next" >图片：</label>
+                <div class="layui-input-inline" style="width:160px;">
+                    <img id='person_img1_url'  name='person_img1_url' style='width: 100px; height:100px' src=''  data-file='btn'  data-field='person_img1' data-type='png,jpg,gif' >
+                    <input lay-verify='required' required type='hidden' value='' id="person_img1" name='person_img'>
+                </div>
+                <div class="layui-input-inline" style="width:160px;">
+                    <img id='person_img2_url'  name='person_img2_url' style='width: 100px; height:100px' src=''  data-file='btn'  data-field='person_img2' data-type='png,jpg,gif' >
+                    <input lay-verify='required' required type='hidden' value='' id="person_img2" name='person_img'>
+                </div>
+                <div class="layui-input-inline" style="width:160px;">
+                    <img id='person_img3_url'  name='person_img3_url' style='width: 100px; height:100px' src=''  data-file='btn'  data-field='person_img3' data-type='png,jpg,gif' >
+                    <input lay-verify='required' required type='hidden' value='' id="person_img3" name='person_img'>
+                </div>
+                <div class="layui-input-inline" style="width:160px;">
+                    <img id='person_img4_url'  name='person_img4_url' style='width: 100px; height:100px' src=''  data-file='btn'  data-field='person_img4' data-type='png,jpg,gif' >
+                    <input lay-verify='required' required type='hidden' value='' id="person_img4" name='person_img'>
+                </div>
+                <div class="layui-input-inline" style="width:160px;">
+                    <img id='person_img5_url'  name='person_img5_url' style='width: 100px; height:100px' src=''  data-file='btn'  data-field='person_img5' data-type='png,jpg,gif' >
+                    <input lay-verify='required' required type='hidden' value='' id="person_img5" name='person_img'>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label " >个人宣言：</label>
+                <div class="layui-input-block">
+                    <textarea name="declaration" id="declaration" cols="30" rows="10">{$info.declaration |default=''}</textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label " >小视频：</label>
+                <div class="layui-input-block" style="width:260px;">
+                    <video
+                            data-file='btn'
+                            data-field='small_video'
+                            data-type='mp4'
+                            id="small_video_url"
+                            name="small_video_url"
+                            src="{$info.small_video |default=''}"
+                            controls="controls">
+                    </video>
+                    <input lay-verify='required' required type='hidden' value='' id="small_video" name='small_video'>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label " >详情：</label>
+                <div class="layui-input-block">
+                    <textarea name="desc" id="desc" cols="30" rows="10">{$info.desc |default=''}</textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" ></label>
+                <div class="layui-input-block">
+                    <input type="button" value="提交" id="sub" class="layui-btn">
+                </div>
+            </div>
+            <input type="hidden" id="activity_id" value="{$activity_id}">
+        </div>
+    </div>
+</div>
+</form>
+<script>
+    layui.use(['element', 'jquery', 'layer', 'form','laydate','laytpl'], function () {
+        var $ = layui.jquery, layer = layui.layer, form = layui.form,laytpl=layui.laytpl,layedit = layui.layedit;
+        var laydate = layui.laydate;
+        //富文本编辑器
+        layedit.set({
+            uploadImage: {
+                url: "?s=admin/api.plugs/plupload&type=layui",
+                type: 'post'
+            }
+        })
+        var declaration = layedit.build('declaration'); //建立规则编辑器
+        var desc = layedit.build('desc'); //建立奖品编辑器
+        form.render();
+
+        $("#sub").click(function(){
+            var arr = new Object();
+            //活动id
+            arr['activity_id'] = $("#activity_id").val();
+            //获取头像
+            arr['head_img'] = $("#head_img").val();
+            if(!arr['head_img']){
+                layer.msg("请上传头像");
+                return false;
+            }
+            //获取姓名
+            arr['name'] = $("#name").val();
+            if(!arr['name']){
+                layer.msg("请输入姓名");
+                return false;
+            }
+            //获取手机号
+            arr['mobile'] = $("#mobile").val();
+            //获取票数
+            arr['ticket_num'] = $("#ticket_num").val();
+            //获取礼物金额
+            arr['gift_money'] = $("#gift_money").val();
+            //获取热度
+            arr['hot_num'] = $("#hot_num").val();
+            //选手编号
+            arr['player_num'] = $("#player_num").val();
+            //获取多个图片
+            var img_arr = "";
+            $.each($("input[name='person_img']"),function(i,n){
+                var this_img = "";
+                this_img = $(this).attr("src");
+                if(this_img != undefined){
+                    img_arr += this_img + ",";
+                }
+            })
+            /*
+            if(img_arr == ""){
+                layer.msg("请上传图片");
+                return false;
+            }
+            */
+            img_arr = img_arr.substring(0,img_arr.length - 1)
+            arr['img_arr'] = img_arr;
+            //获取个人宣言
+            arr['declaration'] = layedit.getContent(declaration);
+            //获取详情
+            arr['desc'] = layedit.getContent(desc);
+            //小视频
+            arr['small_video'] = $("#small_video").val();
+            //分组
+            arr['group_id'] = $("#group_id").val();
+            //作品名称
+            arr['pro_name'] = $("#pro_name").val();
+          //公司名称
+            arr['company_name'] = $("#company_name").val();
+          
+            $.ajax({
+                type: 'POST',
+                url: "{:url('activity/addPlayer')}",
+                data: {arr:arr},
+                dataType: 'json',
+                success: function (data) {
+                    layer.msg(data.msg);
+                    if(data.code == 1){
+                      $.form.reload();
+                        // var go_url = "/admin.html#/ticket/activity/index.html?spm="+"{$_GET['spm']}";
+                        // window.location.href = go_url;
+                    }
+                }
+            });
+        })
+    })
+
+</script>
+{/block}

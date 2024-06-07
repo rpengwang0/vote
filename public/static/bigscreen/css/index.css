@@ -1,0 +1,141 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif;
+}
+li{list-style: none;}
+.bg_bigbox{
+    min-width: 1900px;
+    height: 100%;
+    background-image: url('../img/bg.png');
+    background-size: cover;
+    position: relative;
+}
+.bg_bigbox .center_style{
+    text-align: center;
+}
+.bg_bigbox .title{
+    padding-top: 100px;
+}
+.bg_bigbox .no123{
+    position: absolute;
+    top: 240px;
+    left: 50%;
+    margin-left: -314px;
+}
+.bg_bigbox .ranking{
+    margin-top: -25px;
+}
+.bg_bigbox .main{
+    margin-top: -275px;
+    padding-bottom: 80px;
+}
+
+.bg_bigbox .red_g{
+    position: absolute;
+    bottom: 18px;
+    left: 0;
+    right: 0;
+}
+.red_g img{
+    width: 100%;
+}
+.bg_bigbox .l_cloud{
+    position: absolute;
+    top: 255px;
+    left: 60px;
+}
+.bg_bigbox .r_cloud{
+    position: absolute;
+    top: 170px;
+    right: 70px;
+}
+/* 前三名 */
+.ranking123 div{
+    text-align: center;
+    position: absolute;
+    color: #c60000;
+    letter-spacing: 2px;
+}
+.bg_bigbox .ranking123 div:nth-of-type(1){
+    top: 304px;
+    left: 904px;
+}
+.bg_bigbox .ranking123 div:nth-of-type(3){
+    top: 373px;
+    left: 1124px;
+}
+.bg_bigbox .ranking123 div:nth-of-type(2){
+    top: 352px;
+    left: 699px;
+}
+.bg_bigbox .ranking123 div img{border-radius: 50%;}
+.bg_bigbox .ranking123 div:nth-of-type(1) img{
+    width: 120px;
+    height: 120px;
+}
+.bg_bigbox .ranking123 div:nth-of-type(3) img{
+    width: 78px;
+    height: 78px;
+}
+.bg_bigbox .ranking123 div:nth-of-type(2) img{
+    width: 96px;
+    height: 96px;
+}
+.bg_bigbox .ranking123 div:nth-of-type(1) .ranking123_name{padding-top: 20px;color: #ffe6c6;font-size: 20px;display: block;}
+.bg_bigbox .ranking123 div:nth-of-type(2) .ranking123_name{padding-top: 15px;color: #f3f2f1;font-size: 20px;display: block;}
+.bg_bigbox .ranking123 div:nth-of-type(3) .ranking123_name{padding-top: 10px;color: #f9cdbb;font-size: 20px;display: block;}
+.bg_bigbox .ranking123 p{
+    background: #ffe2b7;
+    border-radius: 20px;
+    padding: 0px 8px;
+    width: max-content;
+    margin: 5px auto 0;
+}
+.bg_bigbox .ranking123 div:nth-of-type(2) p{background: #f2f1f0;}
+.bg_bigbox .ranking123 div:nth-of-type(3) p{background: #f9c6b4;}
+/* 后面的排名 */
+.ticket{
+    position: absolute;
+    left: 357px;
+    top: 565px;
+    z-index: 99;
+    display: flex;
+    flex-wrap:wrap;
+    width: 1200px;
+    letter-spacing: 2px;
+}
+.ticket li{margin: auto;text-align: center;color: #402206;font-size: 20px;}
+.ticket .ticket_one{
+    width: 890px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.ticket .ticket_two{
+    width: 1200px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+}
+.ticket_public_box img{
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    border: #fff0aa solid 2px;
+}
+.ticket_public p:nth-of-type(2){
+    font-size: 18px;
+    background-color: #fac069;
+    border-radius: 20px;
+    padding: 0px 8px;
+    width: max-content;
+    margin: auto;
+    color: #c60000;
+}
+.ticket_public p:nth-of-type(3){
+    letter-spacing: 0px;
+    color: #c30000;
+    font-weight: 700;
+}

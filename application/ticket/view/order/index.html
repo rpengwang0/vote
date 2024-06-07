@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>测试微信支付</h1>
+<input type="text" placeholder="输入金额" name="money" id="money" value="123123">
+<button id="paytest" style="width: 500px;height: 500px">支付</button>
+</body>
+</html>
+<script src="/static/plugs/jquery/jquery-1.7.2.min.js"></script>
+<script src='//res.wx.qq.com/open/js/jweixin-1.2.0.js'></script>
+<script>
+    $("#paytest").click(function () {
+        $.ajax({
+            type: 'POST',
+            url: "{:url('Order/index2')}",
+            data: {
+                money: $("#money").val()
+            },
+            dataType: 'json',
+            success: function (res) {
+                wx.config(JSON.parse(res.data.configjson));
+                var options = JSON.parse(res.data.optionjson);
+                options.success = function(){
+                    alert('支付成功');
+                }
+                wx.chooseWXPay(options);
+            }
+        });
+    })
+</script>

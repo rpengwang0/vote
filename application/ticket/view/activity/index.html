@@ -1,0 +1,105 @@
+{block name='style'}
+<style>
+    .pp {
+        text-align: left;display: block;color:black;
+    }
+</style>
+{/block}
+{extend name='main'}
+
+{block name="button"}
+    <button data-open='{:url("addActivity")}' data-title="添加用户" class='layui-btn layui-btn-sm layui-btn-primary'>添加活动</button>
+{/block}
+
+
+{block name="content"}
+<div class="think-box-shadow">
+    {include file='activity/index_search'}
+    <table class="layui-table margin-top-10" lay-skin="line">
+        {notempty name='list'}
+        <thead>
+        <tr>
+            <th class='text-left nowrap'>活动id</th>
+            <th class='text-left nowrap'>活动标题</th>
+            <th class='text-left nowrap'>活动简介</th>
+            <th class='text-left nowrap'>活动海报</th>
+            <th class='text-left nowrap'>活动时间</th>
+            <th class='text-left nowrap'>活动数据</th>
+            <th class='text-left nowrap'>创建时间</th>
+            <th class='text-left nowrap'>活动状态</th>
+            <th class='text-center nowrap'>操作</th>
+        </tr>
+        </thead>
+        {/notempty}
+
+        <tbody>
+        {foreach $list as $key=>$vo}
+        <tr data-dbclick activity_id="{$vo.activity_id}">
+            <td class='text-left nowrap'>{$vo.activity_id|default=''}</td>
+            <td class='text-left nowrap'>{$vo.activity_title|default=''}</td>
+            <td class='text-left nowrap'>{$vo.activity_desc|default=''}</td>
+            <td class='text-left nowrap'><a target="_blank" href="{$vo.poster_img|default=''}"><img src="{$vo.poster_img|default=''}" alt=""></a></td>
+            <td class='text-left nowrap'>开始：{$vo.activity_start_time|date='Y-m-d H:i'} <br> 结束：{$vo.activity_end_time|date='Y-m-d H:i'}</td>
+            <td class='text-left nowrap'>参与人数：{$vo.sum_player}  <br> 投票数量：{$vo.ticket_num} <br> 礼物数量：{$vo.gift_money} 元 </td>
+            <td class='text-left nowrap'>{$vo.create_time|date='Y-m-d H:i'}</td>
+            <td class='text-left nowrap'>{if condition="$vo.status eq 1"}<b style="color: green;">开启</b>{else /}<b style="color:red;">关闭</b>{/if}</td>
+            <td class='text-left nowrap'>
+                <ul class="layui-nav" style="padding: 0px;background-color: #cccccc">
+                    <li class="layui-nav-item" style="width:100%;">
+                        <dl class="layui-nav-child" activity_id="{$vo.activity_id}">
+                            {if $vo.status == 1}
+                            <dd><a href="javascript:;" class=" save_activity_status pp" type="button" status="1">关闭</a></dd>
+                            {else}
+                            <dd><a href="javascript:;" class=" save_activity_status pp" type="button" status="2" value="开启">开启</a></dd>
+                            {/if}
+                            <dd><a href="javascript:;" class=" pp" data-open='{:url("addActivity")}?activity_id={$vo.activity_id}' type="button" value="编辑">编辑</a></dd>
+                            <!--                <input class="" data-open='{:url("groupList")}?activity_id={$vo.activity_id}' data-wieth="500px;" type="button" value="分组管理" autocomplete="off"><input class="" data-open='{:url("groupList")}?activity_id={$vo.activity_id}' data-wieth="500px;" type="button" value="分组管理" autocomplete="off">-->
+                            <dd><a href="javascript:;" class=" pp" data-open='{:url("playerList")}?activity_id={$vo.activity_id}&group_id=-1' data-wieth="500px;" type="button" value="选手管理" autocomplete="off">选手管理</a></dd>
+                            <dd><a href="javascript:;" class=" pp" data-modal='{:url("activityGiftList")}?activity_id={$vo.activity_id}' data-wieth="500px;" type="button" value="礼物设置" autocomplete="off">礼物设置</a></dd>
+                            <dd><a href="javascript:;" class=" pp" data-open='{:url("orderList")}?activity_id={$vo.activity_id}' data-wieth="500px;" type="button" value="订单管理" autocomplete="off">订单管理</a></dd>
+                            <dd><a href="javascript:;" class=" pp" data-title='Banner管理 <b style="color:blue">(建议尺寸304*180)</b>' data-modal='{:url("bannerlist")}?activity_id={$vo.activity_id}' data-wieth="500px;" type="button" value="banner管理" autocomplete="off">banner管理</a></dd>
+                            <dd><a href='{:url("/ticket/activity/bigscreen")}?activity_id={$vo.activity_id}' target="_blank" data-wieth="500px;" value="大屏展示" autocomplete="off">大屏展示</a></dd>
+                        </dl>
+                        <a style="color:#0c0c0c;"><span style="margin-right: 20px;"><i class="layui-icon layui-icon-menu-fill margin-right-5"></i>菜单栏</span></a>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        {/foreach}
+        </tbody>
+    </table>
+    {empty name='list'}<span class="notdata">没有记录哦</span>{/empty}
+</div>
+<script src="__ROOT__/static/plugs/layui/layui.all.js"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate','jquery','layer'], function(){
+        var form = layui.form,
+            layer = layui.layer,
+            layedit = layui.layedit,
+            laydate = layui.laydate,
+            $ = layui.jquery;
+        laydate.render();
+        $(".save_activity_status").click(function(){
+            var activity_id = $(this).parent().parent().attr("activity_id");
+            var status = $(this).attr("status");
+            if(status == 1){
+                status = 2;
+            }else{
+                status = 1;
+            }
+            $.ajax({
+                type: 'POST',
+                url: "{:url('activity/saveActivityStatus')}",
+                data: {activity_id:activity_id,status:status},
+                dataType: 'json',
+                success: function (data) {
+                    layer.msg(data.msg);
+                    if(data.code == 1){
+                        window.location.reload();
+                    }
+                }
+            });
+        })
+    });
+</script>
+{/block}

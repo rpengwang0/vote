@@ -1,0 +1,138 @@
+{extend name='main'}
+
+{block name="content"}
+<div class="think-box-shadow">
+    <table class="layui-table margin-top-10" lay-skin="line">
+        <thead>
+        <tr>
+            <th class='text-left nowrap'>分组图片</th>
+            <th class='text-left nowrap'>分组名称</th>
+            <th class='text-left nowrap'>总票数</th>
+            <th class='text-left nowrap'>创建时间</th>
+            <th class='text-left nowrap'>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {foreach $group_list as $key=>$vo}
+        <tr data-dbclick group_id="{$vo.group_id}">
+<!--            <td><img src="{$vo.img|default='https://ticket-online.oss-cn-hangzhou.aliyuncs.com/b8697ab2b97ecd2a/268c37cf2b4f467b.jpg'}" style="width:100px;height:50px;"></td>-->
+            <td>
+                <label class="layui-form-item margin-top-20 block relative">
+                    <div style='margin-left: 50px;'>
+                        <img id='img_{$key}_url'  name='img_{$key}_url' style='width: 100px; height:50px' src="{$vo.img|default='https://ticket-online.oss-cn-hangzhou.aliyuncs.com/b8697ab2b97ecd2a/268c37cf2b4f467b.jpg'}"  data-file='btn'  data-field='img_{$key}' data-type='png,jpg,gif,jpeg' >&nbsp;&nbsp;&nbsp;
+                        <input lay-verify='required' required type='hidden' value="{$vo.img|default='https://ticket-online.oss-cn-hangzhou.aliyuncs.com/b8697ab2b97ecd2a/268c37cf2b4f467b.jpg'}" id="img_{$key}" name='img_{$key}' class="img_edit">
+                        <p class='help-block'></p>
+                    </div>
+                </label>
+            </td>
+            <td class="text-left nowrap">
+                <input class="layui-input save_group_name" type="text" value="{$vo.group_name}" group_name="{$vo.group_name}">
+            </td>
+            <td class="text-left nowrap">{$vo.sum_ticket_num}</td>
+            <td class="text-left nowrap">{$vo.create_time}</td>
+            <td class="text-left nowrap">
+                {if $vo['group_id'] gt 0 }
+                    <input type="button" value="删除"  data-area="1200px,600px" class="layui-btn layui-btn-sm del_group">
+                {/if}
+            </td>
+        </tr>
+        {/foreach}
+        </tbody>
+    </table>
+    {empty name='group_list'}<span class="notdata">没有记录哦</span>{/empty}
+</div>
+<script>
+    layui.use(['laydate','jquery','form','layedit'],function(){
+        var laydate = layui.laydate,
+            $ = layui.jquery,
+            form = layui.form;
+        //js从这儿开始
+
+        //修改图片
+
+        $('.img_edit').change(function(){
+            var img = $(this).val();
+            var group_id = $(this).parents('tr').attr('group_id');
+            $.ajax({
+                type: 'POST',
+                url: "{:url('activity/saveGroupImg')}",
+                data: {img:img,group_id:group_id},
+                dataType: 'json',
+                success: function (data) {
+                    layer.msg(data.msg);
+                }
+            });
+        });
+
+            //修改分组名称
+        $(".save_group_name").blur(function(){
+            var obj = $(this);
+            var group_name = obj.val();
+            var old_group_name = obj.attr('group_name');
+            if(group_name == old_group_name){
+                return false;
+            }
+            var group_id = obj.parent().parent().attr('group_id');
+            $.ajax({
+                type: 'POST',
+                url: "{:url('activity/saveGroupName')}",
+                data: {group_name:group_name,group_id:group_id},
+                dataType: 'json',
+                success: function (data) {
+                    layer.msg(data.msg);
+                    if(data.code == 1){
+                        obj.attr('group_name',group_name);
+                    }
+                }
+            });
+        })
+        //删除分组
+        $(".del_group").click(function(){
+            var obj = $(this);
+            var group_id = obj.parent().parent().attr('group_id');
+            layer.confirm('确定删除?', {
+                btn: ['确定','取消'] //按钮
+            }, function(){
+                $.ajax({
+                    type: 'POST',
+                    url: "{:url('activity/delActivityGroup')}",
+                    data: {group_id:group_id},
+                    dataType: 'json',
+                    success: function (data) {
+                        layer.msg(data.msg);
+                        if(data.code == 1){
+                            obj.parent().parent().remove();
+                            //移除改行
+                        }
+                    }
+                });
+            }, function(){
+
+            });
+        })
+
+    })
+    /*
+    * url 目标url
+    * arg 需要替换的参数名称
+    * arg_val 替换后的参数的值
+    * return url 参数替换后的url
+    */
+    function changeURLArg(url,arg,arg_val){
+        var pattern=arg+'=([^&]*)';
+        var replaceText=arg+'='+arg_val;
+        if(url.match(pattern)){
+            var tmp='/('+ arg+'=)([^&]*)/gi';
+            tmp=url.replace(eval(tmp),replaceText);
+            return tmp;
+        }else{
+            if(url.match('[\?]')){
+                return url+'&'+replaceText;
+            }else{
+                return url+'?'+replaceText;
+            }
+        }
+        return url+'\n'+arg+'\n'+arg_val;
+    }
+</script>
+{/block}

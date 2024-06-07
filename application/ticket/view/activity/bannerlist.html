@@ -1,0 +1,202 @@
+{extend name='main'}
+
+{block name="button"}
+
+{/block}
+
+
+{block name="content"}
+<div class="think-box-shadow">
+    <!--{include file='activity/gift_search'}-->
+    <div class="layui-form-item">
+
+        <table class="layui-table" lay-skin="line" id="tb1">
+            <tr class="layui-bg-gray">
+                <th class="text-center" width="80px">缩略图</th>
+                <th class="text-center" width="80px">视频</th>
+                <th class="text-center" width="80px">类别</th>
+                <th class="text-center" width="80px">操作</th>
+            </tr>
+            {volist name="list" id="vo"}
+            {eq name="$vo.type" value='1'}
+            <tr count_num="{$key}">
+                <td class="text-center">
+                    <label>
+                        <img src="{$vo.banner_img}" alt="">
+                    </label>
+                </td>
+                <td class="text-center">
+                    <label>
+                        ---
+                    </label>
+                </td>
+                <td class="text-center">
+                    <label>
+                        图片
+                    </label>
+                </td>
+                <td class="text-center">
+                    <label style='display:inline-block' banner_id='{$vo.banner_id}'>
+                        <input class='layui-btn layui-btn-sm add_banner' type='button' value='提交'>
+                        <input class='layui-btn layui-btn-sm del_banner' type='button' value='删除'>
+                    </label>
+                </td>
+            </tr>
+            {/eq}
+            {eq name="$vo.type" value='2'}
+            <tr count_num="{$key}">
+                <td class="text-center">
+                    <label>
+                        <img src="{$vo.banner_img}" alt="">
+                    </label>
+                </td>
+                <td class="text-center">
+                    <label>
+                        <video src="{$vo.video_url}" style='width: 200px; height:156px;'controls="controls"></video>
+                    </label>
+                </td>
+                <td class="text-center">
+                    <label>
+                        视频
+                    </label>
+                </td>
+                <td class="text-center">
+                    <label style='display:inline-block' banner_id='{$vo.banner_id}'>
+                        <input class='layui-btn layui-btn-sm add_banner' type='button' value='提交'>
+                        <input class='layui-btn layui-btn-sm del_banner' type='button' value='删除'>
+                    </label>
+                </td>
+            </tr>
+            {/eq}
+            {/volist}
+        </table>
+    </div>
+    <input type="hidden" id="banner_count" value="{$banner_count}">
+    <input type="hidden" id="activity_id" value="{$activity_id}">
+    <span class="notdata"><button class="layui-btn" id="add_banner_html"><i class="layui-icon">&#xe654;</i>新增</button></span>
+</div>
+
+
+<script>
+
+    layui.use(['form', 'layedit', 'laydate','jquery','layer'], function(){
+        var $ = layui.jquery;
+        //选择视频
+        $(document).on('change','.choose_type',function()
+        {
+            var num = $(this).attr('data-num');
+            if($(this).val() == '1')
+            {
+                $(this).parents('td').prev().find('label').html('');
+            }else if($(this).val() == '2'){
+                var html = '';
+                html += "<div style='margin-left: 10px;'>";
+                html += "<video style='width: 200px; height:156px;'  id='poster_video_"+num+"_url'  name='poster_video_"+num+"_url'  src='' ></video>&nbsp;&nbsp;&nbsp;";
+                html += "<button  id='poster_video_"+num+"_btn'  class='layui-btn layui-btn-sm' data-file='btn'  data-field='poster_video_"+num+"' data-type='mp3,mp4' >上传视频</button>&nbsp;&nbsp;&nbsp;";
+                html += "<input lay-verify='required' required type='hidden' value='' id='poster_video_"+num+"' name='poster_video_"+num+"'>";
+                html += "<p class='help-block'></p>";
+                $(this).parents('td').prev().find('label').html(html);
+                $("#poster_video_"+num+"_btn").uploadFile();
+            }
+
+        });
+        //添加html
+        $(document).on('click','#add_banner_html',function(){
+
+            var banner_count = $("#banner_count").val();
+            var num = parseInt(banner_count) + 1 ;
+            $("#banner_count").val(num);
+            var html = "";
+            html += "<tr count_num='"+num+"'>";
+            html += "<td class='text-center'>";
+            html += "<label class='layui-form-item margin-top-20 block relative'>";
+            html += "<div style='margin-left: 10px;'>";
+            html += "<img id='poster_img_"+num+"_url'  name='poster_img_"+num+"_url' style='width: 100px; height:56px' src=''  data-file='btn'  data-field='poster_img_"+num+"' data-type='png,jpg,gif,jpeg' >&nbsp;&nbsp;&nbsp;";
+            html += "<input lay-verify='required' required type='hidden' value='' id='poster_img_"+num+"' name='poster_img_"+num+"'>";
+            html += "<p class='help-block'></p>";
+            html += "</label>";
+            html += "</td>";
+            html += "<td class='text-center'>";
+            html += "<label class='layui-form-item margin-top-20 block relative'>";
+            html += "</label>";
+            html += "</td>";
+            html += "<td class='text-center'>";
+            html += "<label>";
+            html += "<select id='type_"+num+"' class='choose_type' data-num='"+num+"' ><option value='1'>图片</option><option value='2'>视频</option></select>";
+            html += "</label>";
+            html += "</td>";
+            html += "<td class='text-center' width='150'>";
+            html += "<label style='display:inline-block' banner_id='0'>";
+            html += "<input class='layui-btn layui-btn-sm add_banner' type='button' value='提交'>";
+            html += "<input class='layui-btn layui-btn-sm del_banner' type='button' value='删除'>";
+            html += " </label>";
+            html += "</td>";
+            html += "</tr>";
+            $("#tb1").children().append(html)
+            $("#poster_img_"+num+"_url").uploadFile();
+
+        })
+
+        //获取某一行的数据
+        function getGiftLineData(num){
+            var arr = new Object();
+            //活动id
+            arr['activity_id'] = $("#activity_id").val();
+            //图片
+            arr['banner_img_url'] = $("#poster_img_"+num).val();
+            //视频
+            arr['video_url'] = $("#poster_video_"+num).val();
+            //类别
+            arr['type'] = $("#type_"+num).val();
+            return arr;
+        }
+
+        //提交
+        $(document).on('click','.add_banner',function() {
+            var obj = $(this);
+            obj.attr("disabled","disabled");
+            //行数
+            var count_num = obj.parent().parent().parent().attr("count_num");
+            var data = getGiftLineData(count_num);
+            if(obj.parent().attr("banner_id") > 0){
+                //修改时把banner_id也传过去
+                data['banner_id'] = obj.parent().attr("banner_id");
+            }
+            $.ajax({
+                type: 'POST',
+                url: "{:url('activity/addBanner')}",
+                data: data,
+                dataType: 'json',
+                async:false,
+                success: function (data) {
+                    layer.msg(data.msg)
+                    if(data.code == 1){
+                        var banner_id = data.data.banner_id;
+                        obj.parent().attr("banner_id",banner_id);
+                    }
+                    obj.removeAttr("disabled");
+                }
+            });
+        });
+
+        //删除
+        $(document).on("click",".del_banner",function(){
+            var obj = $(this);
+            var banner_id = obj.parent().attr("banner_id");
+            $.ajax({
+                type: 'POST',
+                url: "{:url('activity/delBanner')}",
+                data: {banner_id:banner_id},
+                dataType: 'json',
+                async:false,
+                success: function (data) {
+                    layer.msg(data.msg)
+                    if(data.code == 1){
+                        obj.parent().parent().parent().remove();
+                    }
+                }
+            });
+        })
+    });
+</script>
+{/block}

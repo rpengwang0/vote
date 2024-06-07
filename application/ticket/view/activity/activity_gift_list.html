@@ -1,0 +1,158 @@
+{extend name='main'}
+
+{block name="button"}
+    <button onclick="javascript:history.back(-1);" data-title="添加用户" class='layui-btn layui-btn-sm layui-btn-primary'>返回</button>
+{/block}
+
+
+{block name="content"}
+<div class="think-box-shadow">
+    <!--{include file='activity/gift_search'}-->
+    <div class="layui-form-item">
+
+        <table class="layui-table" lay-skin="line" id="tb1">
+            <tr class="layui-bg-gray">
+                <th class="text-center" width="80px">名称</th>
+                <th class="text-center" width="80px">图片</th>
+                <th class="text-center" width="80px">礼物价格(元)</th>
+                <th class="text-center" width="80px">抵票数(张)</th>
+                <th class="text-center" width="80px"> 操 作 </th>
+            </tr>
+            {volist name="list" id="vo"}
+                <tr count_num="{$vo.num}">
+                    <td class="text-center">
+                        <label><input type="text" name="gift_name_{$vo.num}" id="gift_name_{$vo.num}" value="{$vo.gift_name}" class="layui-input text-center padding-left-0"></label>
+                    </td>
+                    <td class="text-center">
+                        <label class="layui-form-item margin-top-20 block relative">
+                            <div style='margin-left: 50px;'>
+                                <img id='poster_img_{$vo.num}_url'  name='poster_img_{$vo.num}_url' style='width: 100px; height:100px' src='{$vo.gift_img}'  data-file='btn'  data-field='poster_img_{$vo.num}' data-type='png,jpg,gif' >&nbsp;&nbsp;&nbsp;
+                                <input lay-verify='required' required type='hidden' value='{$vo.gift_img}' id="poster_img_{$vo.num}" name='poster_img_{$vo.num}'>
+                                <p class='help-block'></p>
+                            </div>
+                        </label>
+                    </td>
+                    <td class="text-center">
+                        <label><input type="number" name="gift_price_{$vo.num}" id="gift_price_{$vo.num}" value="{$vo.gift_price}"  class="layui-input text-center padding-left-0"></label>
+                    </td>
+                    <td class="text-center">
+                        <label><input type="number" name="gift_ticket_num_{$vo.num}" id="gift_ticket_num_{$vo.num}" value="{$vo.gift_ticket_num}" class="layui-input text-center padding-left-0"></label>
+                    </td>
+                    <td class="text-center" width="150px">
+                        <label gift_id="{$vo.id}">
+                            <input class='layui-btn layui-btn-sm add_gift' type='button' value='提交'>
+                            <input class="layui-btn layui-btn-sm del_gift" type="button" value="删除">
+                        </label>
+                    </td>
+                </tr>
+            {/volist}
+        </table>
+    </div>
+    <input type="hidden" id="gift_count" value="{$gift_count}">
+    <input type="hidden" id="activity_id" value="{$activity_id}">
+    <span class="notdata"><button class="layui-btn" id="add_gift_html"><i class="layui-icon">&#xe654;</i>新增</button></span>
+</div>
+<!--<script src="/static/plugs/jquery/jquery-1.7.2.min.js"></script>-->
+<script>
+    layui.use(['form', 'layedit', 'laydate','jquery','layer'], function(){
+        var $ = layui.jquery;
+        //添加html
+        $("#add_gift_html").click(function(){
+            var gift_count = $("#gift_count").val();
+            var num = parseInt(gift_count) + 1 ;
+            $("#gift_count").val(num);
+            var html = "";
+            html += "<tr count_num='"+num+"'>";
+                html += "<td class='text-center'>";
+                    html += "<label><input type='text' name='gift_name_"+num+"' id='gift_name_"+num+"' value='' class='layui-input text-center padding-left-0'></label>";
+                html += "</td>";
+                html += "<td class='text-center'>";
+                    html += "<label class='layui-form-item margin-top-20 block relative'>";
+                        html += "<div style='margin-left: 50px;'>";
+                        html += "<img id='poster_img_"+num+"_url'  name='poster_img_"+num+"_url' style='width: 100px; height:100px' src=''  data-file='btn'  data-field='poster_img_"+num+"' data-type='png,jpg,gif' >&nbsp;&nbsp;&nbsp;";
+                        html += "<input lay-verify='required' required type='hidden' value='' id='poster_img_"+num+"' name='poster_img_"+num+"'>";
+                        html += "<p class='help-block'></p>";
+                    html += "</label>";
+                html += "</td>";
+                html += "<td class='text-center'>";
+                    html += "<label><input type='number' name='gift_price_"+num+"' id='gift_price_"+num+"' value='0' data-blur-number='0' class='layui-input text-center padding-left-0'></label>";
+                html += "</td>";
+                html += "<td class='text-center'>";
+                    html += "<label><input type='number' name='gift_ticket_num_"+num+"' id='gift_ticket_num_"+num+"' value='1' data-blur-number='0' class='layui-input text-center padding-left-0'></label>";
+                html += "</td>";
+                html += "<td class='text-center' width='150'>";
+                    html += "<label style='display:inline-block' gift_id='0'>";
+                        html += "<input class='layui-btn layui-btn-sm add_gift' type='button' value='提交'>";
+                        html += "<input class='layui-btn layui-btn-sm del_gift' type='button' value='删除'>";
+                    html += " </label>";
+                html += "</td>";
+            html += "</tr>";
+            $("#tb1").children().append(html)
+            $("#poster_img_"+num+"_url").uploadFile();
+        })
+        //获取某一行的数据
+        function getGiftLineData(num){
+            var arr = new Object();
+            //活动id
+            arr['activity_id'] = $("#activity_id").val();
+            //名称
+            arr['gift_name'] = $("#gift_name_"+num).val();
+            //图片
+            arr['gift_img_url'] = $("#poster_img_"+num).val();
+            //价格
+            arr['gift_price'] = $("#gift_price_"+num).val();
+            //抵票数
+            arr['gift_ticket_num'] = $("#gift_ticket_num_"+num).val();
+            return arr;
+        }
+
+        //礼物提交
+        $(document).on('click','.add_gift',function() {
+            var obj = $(this);
+            obj.attr("disabled","disabled");
+            //行数
+            var count_num = obj.parent().parent().parent().attr("count_num");
+            var data = getGiftLineData(count_num);
+            if(obj.parent().attr("gift_id") > 0){
+                //修改时把礼物id也传过去
+                data['gift_id'] = obj.parent().attr("gift_id");
+            }
+            $.ajax({
+                type: 'POST',
+                url: "{:url('activity/addGift')}",
+                data: data,
+                dataType: 'json',
+                async:false,
+                success: function (data) {
+                    layer.msg(data.msg)
+                    if(data.code == 1){
+                        var gift_id = data.data.gift_id;
+                        obj.parent().attr("gift_id",gift_id);
+                    }
+                    obj.removeAttr("disabled");
+                }
+            });
+        });
+
+        //删除
+        $(document).on("click",".del_gift",function(){
+            var obj = $(this);
+            var gift_id = obj.parent().attr("gift_id");
+            $.ajax({
+                type: 'POST',
+                url: "{:url('activity/delGift')}",
+                data: {gift_id:gift_id},
+                dataType: 'json',
+                async:false,
+                success: function (data) {
+                    layer.msg(data.msg)
+                    if(data.code == 1){
+                        obj.parent().parent().parent().remove();
+                    }
+                }
+            });
+        })
+
+    });
+</script>
+{/block}

@@ -1,0 +1,99 @@
+<?php
+    $order = "3";
+    if(isset($_GET['order'])){
+        $order = $_GET['order'];
+        if($order != 1 && $order != 2 && $order !=3 ){
+            $order = 3;
+        }
+    }
+?>
+<fieldset>
+
+    <legend>条件搜索</legend>
+
+    <form class="layui-form layui-form-pane form-search" action="{:request()->url()}" onsubmit="return false" method="get" autocomplete="off">
+
+        <div class="layui-form-item layui-inline">
+            <label class="layui-form-label">手机号</label>
+            <div class="layui-input-inline">
+                <input name="mobile" value="{$Think.get.mobile|default=''}" placeholder="请输入手机号" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-inline">
+            <label class="layui-form-label">姓名</label>
+            <div class="layui-input-inline">
+                <input name="username" value="{$Think.get.username|default=''}" placeholder="请输入姓名" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-inline">
+            <label class="layui-form-label">分组</label>
+            <div class="layui-input-inline">
+                <select name="group_id">
+                    <option value="-1">请选择分组</option>
+                    {foreach $group_list as $item}
+                    {if $Think.get.group_id eq $item['group_id']}
+                    <option selected value="{$item['group_id']}">{$item['group_name']}</option>
+                    {else}
+                    <option value="{$item['group_id']}">{$item['group_name']}</option>
+                    {/if}
+                    {/foreach}
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item layui-inline">
+            <button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe615;</i> 搜 索</button>
+        </div>
+        <div class="layui-form-item layui-inline" style="margin-left: 10%">
+            {if $order == 1 }
+                <a class="layui-btn" href="javascript:void(0)" order="1">按票数排序</a>
+            {else}
+                <a class="layui-btn layui-btn-primary player_order" href="javascript:void(0)" order="1">按票数排序</a>
+            {/if}
+            {if $order == 2 }
+                <a class="layui-btn" href="javascript:void(0)" order="2">按礼物排序</a>
+            {else}
+                <a class="layui-btn layui-btn-primary player_order" href="javascript:void(0)" order="2">按礼物排序</a>
+            {/if}
+            {if $order == 3 }
+                <a class="layui-btn" href="javascript:void(0)" order="3">重置排序</a>
+            {else}
+                <a class="layui-btn layui-btn-primary player_order" href="javascript:void(0)" order="3">重置排序</a>
+            {/if}
+        </div>
+        <div class="layui-form-item layui-inline" style="margin-left: 10%">
+            <a class="layui-btn layui-btn-primary" data-area="1200px,600px"  data-modal='{:url("groupList")}?activity_id={$activity_id}' >分组管理</a>
+<!--            <a class="layui-btn layui-btn-primary add_group" data-area="1200px,600px" >新增分组</a>-->
+            <a href="javascript:;" class="layui-btn layui-btn-primary" data-title='新增分组 <b style="color:blue">(图片建议尺寸304*180)</b>' data-modal='{:url("addGroup")}?activity_id={$activity_id}' data-wieth="500px;" type="button" autocomplete="off">新增分组</a>
+        </div>
+    </form>
+    <input type="hidden" id="activity_id" value="{$activity_id}">
+
+</fieldset>
+
+<script>
+    form.render()
+    $(".add_group").click(function () {
+        var activity_id = $("#activity_id").val();
+        layer.prompt({title: '请输入分组名称', formType: 3}, function(val, index){
+            layer.confirm('确定添加分组'+val+'?', {
+                btn: ['确定','取消'] //按钮
+            }, function(){
+                $.ajax({
+                    type: 'POST',
+                    url: "{:url('activity/addActivityGroup')}",
+                    data: {group_name:val,activity_id:activity_id},
+                    dataType: 'json',
+                    success: function (data) {
+                        layer.msg(data.msg);
+                        if(data.code == 1){
+                            layer.close(index)
+                        }
+                    }
+                });
+            }, function(){
+                layer.msg("取消添加分组")
+            });
+        });
+    })
+</script>

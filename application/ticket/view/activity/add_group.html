@@ -1,0 +1,72 @@
+{extend name='main'}
+
+{block name="button"}
+
+{/block}
+
+
+{block name="content"}
+<div class="think-box-shadow">
+    <div class="layui-form-item">
+
+        <table class="layui-table" lay-skin="line" id="tb1">
+            <tr class="layui-bg-gray">
+                <th class="text-center" width="80px">分组名称</th>
+                <th class="text-center" width="80px">缩略图</th>
+                <th class="text-center" width="80px">操作</th>
+            </tr>
+            <tr>
+                <td class="text-center">
+                    <label><input type="text" id="group_name"  class="layui-input text-center padding-left-0"></label>
+                </td>
+                <td class="text-center">
+                    <label class="layui-form-item margin-top-20 block relative">
+                        <div style='margin-left: 50px;'>
+                            <img id='img_url'  name='img_url' style='width: 100px; height:50px' src=''  data-file='btn'  data-field='img' data-type='png,jpg,gif,jpeg' >&nbsp;&nbsp;&nbsp;
+                            <input lay-verify='required' required type='hidden'  id="img" name='img'>
+                            <p class='help-block'></p>
+                        </div>
+                    </label>
+                </td>
+                <td class="text-center">
+                    <label style='display:inline-block'>
+                        <input class='layui-btn layui-btn-sm add' type='button' value='提交'>
+                        <input type="hidden" id="activity_id" value="{$activity_id}">
+                    </label>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+
+<script>
+
+    layui.use(['form', 'layedit', 'laydate','jquery','layer'], function(){
+        var $ = layui.jquery;
+
+
+        //提交
+        $(document).on('click','.add',function() {
+            var activity_id = $("#activity_id").val();
+            var group_name = $("#group_name").val();
+            var img = $("#img").val();
+            $.ajax({
+                type: 'POST',
+                url: "{:url('activity/addActivityGroup')}",
+                data: {group_name:group_name,activity_id:activity_id,img:img},
+                dataType: 'json',
+                success: function (data) {
+
+                    if(data.code == 1){
+                        layer.closeAll('page');
+                        layer.msg(data.msg);
+                    }
+                }
+            });
+        });
+
+
+    });
+</script>
+{/block}

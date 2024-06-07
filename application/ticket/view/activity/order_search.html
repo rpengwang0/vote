@@ -1,0 +1,62 @@
+<fieldset>
+
+    <legend>条件搜索</legend>
+
+    <form class="layui-form layui-form-pane form-search" action="{:request()->url()}" onsubmit="return false" method="get" autocomplete="off">
+
+        <div class="layui-form-item layui-inline">
+            <label class="layui-form-label">订单号</label>
+            <div class="layui-input-inline">
+                <input name="order_id" id="order_id" value="{$Think.get.order_id|default=''}" placeholder="请输入订单号" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-inline">
+            <label class="layui-form-label">三方订单号</label>
+            <div class="layui-input-inline">
+                <input name="trade_no" id="trade_no" value="{$Think.get.trade_no|default=''}" placeholder="请输入三方订单号" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-inline">
+            <label class="layui-form-label">订单状态</label>
+            <div class="layui-input-inline">
+                <select name="status" id="status">
+                    <option value="">请选择支付状态</option>
+                    {if $Think.get.status == 1}
+                        <option value="1" selected>已支付</option>
+                    {else}
+                        <option value="1">已支付</option>
+                    {/if}
+
+                    {if $Think.get.status == 2}
+                    <option value="2" selected>未支付</option>
+                    {else}
+                    <option value="2">未支付</option>
+                    {/if}
+
+
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item layui-inline">
+            <button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe615;</i> 搜 索</button>
+        </div>
+    </form>
+
+</fieldset>
+
+<script>
+    //订单导出
+    $("#export_order").click(function () {
+        var str = "";
+        var order_id = $("#order_id").val();
+        str += "order_id="+order_id+"&";
+        var trade_no = $("#trade_no").val();
+        str += "trade_no="+trade_no+"&";
+        var status = $("#status").val();
+        str += "status="+status;
+        str += "&export_order=1";
+        var url =  '/ticket/activity/orderlist?'+str;
+        location.href = url;
+    })
+    form.render()
+</script>
